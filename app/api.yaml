@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: test
+  version: 1.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/
+paths:
+  /go/{n}:
+    get:
+      summary: go
+      operationId: app.go_controller.get
+      description: gogogo
+      parameters:
+        - in: path
+          name: n
+          description: a number
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: search results matching criteria
+        '400':
+          description: bad input parameter

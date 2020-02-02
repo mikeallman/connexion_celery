@@ -1,0 +1,29 @@
+version: "3"
+services:
+
+  rabbit:
+    hostname: rabbit
+    container_name: rabbit
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=pw
+      - RABBITMQ_DEFAULT_VHOST=vhost
+    ports:
+      - "5673:5673"
+
+  backend_server:
+    hostname: backend
+    container_name: backend
+    image: local/celery_application:latest
+    depends_on:
+      - rabbit
+    ports:
+      - "8080:8080"
+
+  celery_worker:
+    image: local/celery_application:latest
+    depends_on:
+      - backend_server
+    command: >
+      celery worker -l info -A app.server:celery_app -s /tmp/celerybeat-schedule
