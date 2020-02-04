@@ -1,7 +1,9 @@
 A simple REST API executing background tasks on a distributed task queue.
 
 Rest API built using [connexion](https://pypi.org/project/connexion/)
+
 Distributed task queue implemented with [celery](https://pypi.org/project/celery/), using [rabbitmq](https://www.rabbitmq.com/) as its message broker.
+
 Also using MongoDB as our state store.
 
 Instructions:
