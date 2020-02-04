@@ -11,6 +11,7 @@ coverage = "*"
 connexion = {extras = ["swagger-ui"],version = "*"}
 celery = "*"
 gunicorn = "*"
+pymongo = "*"
 
 [requires]
 python_version = "3.7"

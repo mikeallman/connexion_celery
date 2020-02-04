@@ -12,12 +12,20 @@ services:
     ports:
       - "5673:5673"
 
+  mongo:
+    hostname: mongo
+    container_name: mongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
   backend_server:
     hostname: backend
     container_name: backend
     image: local/celery_application:latest
     depends_on:
       - rabbit
+      - mongo
     ports:
       - "8080:8080"
 
@@ -27,3 +35,4 @@ services:
       - backend_server
     command: >
       celery worker -l info -A app.server:celery_app -s /tmp/celerybeat-schedule
+

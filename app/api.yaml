@@ -1,25 +1,104 @@
 openapi: 3.0.0
 info:
-  title: test
+  title: Simple Asynchronous Counting API
   version: 1.0.0
 servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/
+
 paths:
-  /go/{n}:
-    get:
-      summary: go
-      operationId: app.go_controller.get
-      description: gogogo
-      parameters:
-        - in: path
-          name: n
-          description: a number
-          required: true
-          schema:
-            type: integer
+
+  /count:
+
+    post:
+      summary: count
+      x-openapi-router-controller: app.count_controller
+      operationId: post
+      description: count to N
       responses:
-        '200':
-          description: search results matching criteria
+        '202':
+          description: count submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/jobUUID'
         '400':
           description: bad input parameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/countAmount'
+
+  /count/{job_uuid}:
+
+    parameters:
+      - $ref: '#/components/parameters/jobUUID'
+
+    get:
+      summary: get count job
+      x-openapi-router-controller: app.count_controller
+      operationId: get
+      description: get status/result of count job
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/countResult'
+        '404':
+          description: not found
+
+components:
+
+  schemas:
+
+    jobUUID:
+      type: object
+      required:
+        - job_uuid
+      properties:
+        job_uuid:
+          type: string
+          format: uuid
+
+    countAmount:
+      type: object
+      required:
+        - count_amount
+      properties:
+        count_amount:
+          type: integer
+
+    countResult:
+      type: object
+      required:
+        - job_uuid
+        - status
+        - count_amount
+        - sum
+        - elapsed_seconds
+      properties:
+        job_uuid:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: ["Queued", "Running", "Complete", "Failed"]
+        count_amount:
+          type: integer
+        sum:
+          type: integer
+        elapsed_seconds:
+          type: integer
+
+  parameters:
+
+    jobUUID:
+      name: job_uuid
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
